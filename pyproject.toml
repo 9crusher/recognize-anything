@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ram"
+version = "0.0.1"
+description = "Recognize Anything Plus Model (RAM++) - Open-Set Image Tagging"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Xinyu Huang"}
+]
+keywords = ["computer vision", "image tagging", "deep learning", "pytorch", "transformer"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "timm==0.4.12",
+    "transformers==4.35.2",
+    "torch==2.0.1",
+    "torchvision==0.15.2",
+    "Pillow==10.1.0",
+    "scipy==1.11.4",
+    "numpy==1.24.4",
+    "tqdm==4.66.1",
+    "ftfy==6.1.3",
+    "regex==2023.10.3",
+    "setuptools>=61.0",
+    "clip @ git+https://github.com/openai/CLIP.git@a9b1bf5920416aaeaec965c25dd9e8f98c864f16",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/xinyu1205/recognize-anything"
+Repository = "https://github.com/xinyu1205/recognize-anything"
+
+[tool.setuptools.packages.find]
+exclude = ["datasets*", "images*", "outputs*", "pretrained*"]
+
+[tool.setuptools.package-data]
+ram = ["*.json"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 100

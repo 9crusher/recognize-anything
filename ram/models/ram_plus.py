@@ -23,7 +23,7 @@ class RAM_plus(nn.Module):
                  med_config=f'{CONFIG_PATH}/configs/med_config.json',
                  image_size=384,
                  text_encoder_type='bert-base-uncased',
-                 vit='base',
+                 vit='swin_l',
                  vit_grad_ckpt=False,
                  vit_ckpt_layer=0,
                  threshold=0.68,
@@ -38,7 +38,7 @@ class RAM_plus(nn.Module):
         Args:
             med_config (str): path for the mixture of encoder-decoder model's configuration file
             image_size (int): input image size
-            vit (str): model size of vision transformer
+            vit (str): model size of vision transformer. Supported values: 'swin_b', 'swin_l'
             threshold (int): tagging threshold
             delete_tag_index (list): delete some tags that may disturb captioning
         """
@@ -130,8 +130,7 @@ class RAM_plus(nn.Module):
                 print("unexpected_keys: ", msg.unexpected_keys)
 
         else:
-            self.visual_encoder, vision_width = create_vit(
-                vit, image_size, vit_grad_ckpt, vit_ckpt_layer)
+            raise ValueError(f"Unsupported model type: {vit}. Only 'swin_b' and 'swin_l' are supported.")
 
         # create tokenzier
         self.tokenizer = init_tokenizer(text_encoder_type)
@@ -402,12 +401,13 @@ class RAM_plus(nn.Module):
 def ram_plus(pretrained='', **kwargs):
     model = RAM_plus(**kwargs)
     if pretrained:
-        if kwargs['vit'] == 'swin_b':
+        vit_type = kwargs.get('vit', 'swin_l')
+        if vit_type == 'swin_b':
             model, msg = load_checkpoint_swinbase(model, pretrained, kwargs)
-        elif kwargs['vit'] == 'swin_l':
+        elif vit_type == 'swin_l':
             model, msg = load_checkpoint_swinlarge(model, pretrained, kwargs)
         else:
-            model, msg = load_checkpoint(model, pretrained)
-        print('vit:', kwargs['vit'])
+            raise ValueError(f"Unsupported model type: {vit_type}. Only 'swin_b' and 'swin_l' are supported.")
+        print('vit:', vit_type)
 #         print('msg', msg)
     return model

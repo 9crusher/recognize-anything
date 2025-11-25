@@ -28,9 +28,66 @@ cd recognize-anything
 pip install -e .
 ```
 
+### Using uv (Recommended for Development)
+
+[uv](https://github.com/astral-sh/uv) is a fast Python package installer:
+
+```bash
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install package with all dependencies from pyproject.toml
+uv pip install -e .
+```
+
+### Docker Installation
+
+Docker provides an isolated, reproducible environment. **The model checkpoint is automatically downloaded during build**, so you don't need to download it manually.
+
+#### Build the Image
+
+```bash
+# CPU-only (default)
+docker build -t ram-plus .
+
+# GPU-enabled (requires NVIDIA Container Toolkit)
+docker build -t ram-plus:gpu .
+```
+
+#### Run Inference
+
+```bash
+# CPU mode - place your images in current directory
+docker run --rm -v $(pwd):/data ram-plus \
+  python /app/inference_ram_plus_openset.py \
+    --image /data/your_image.jpg \
+    --pretrained /models/ram_plus_swin_large_14m.pth
+
+# GPU mode - requires nvidia-docker
+docker run --rm --gpus all -v $(pwd):/data ram-plus:gpu \
+  python /app/inference_ram_plus_openset.py \
+    --image /data/your_image.jpg \
+    --pretrained /models/ram_plus_swin_large_14m.pth
+
+# With custom tag descriptions
+docker run --rm -v $(pwd):/data ram-plus \
+  python /app/inference_ram_plus_openset.py \
+    --image /data/your_image.jpg \
+    --pretrained /models/ram_plus_swin_large_14m.pth \
+    --llm_tag_des /data/tag_descriptions.json
+```
+
+That's it! Just one volume mount (`-v $(pwd):/data`) for both input images and outputs.
+
 ## Checkpoint
 
-Download the RAM++ checkpoint:
+### For Docker Users
+
+The checkpoint is **automatically downloaded** during the Docker build process. No manual download required!
+
+### For Non-Docker Users
+
+Download the RAM++ checkpoint manually:
 
 | Model | Backbone | Checkpoint |
 |-------|----------|------------|

@@ -35,7 +35,7 @@ parser.add_argument('--image-size',
 parser.add_argument('--llm_tag_des',
                     metavar='DIR',
                     help='path to LLM tag descriptions',
-                    default='datasets/openimages_rare_200/openimages_rare_200_llm_tag_descriptions.json')
+                    default='datasets/tag_defs/openimages_rare_200_llm_tag_descriptions.json')
 
 if __name__ == "__main__":
 
